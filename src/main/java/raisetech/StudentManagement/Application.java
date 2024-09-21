@@ -35,13 +35,13 @@ public class Application {
   }
 
   @PostMapping("/student")
-  public void registerStudent(int id, String name, int age) {
-    repository.registerStudent(id, name, age);
+  public void registerStudent(String name, int age) {
+    repository.registerStudent(name, age);
   }
 
   @PatchMapping("/student")
-  public void updateStudent(int id, String name, int age) {
-    repository.updateStudent(id, name, age);
+  public void updateStudent(String name, int age) {
+    repository.updateStudent(name, age);
   }
 
   @DeleteMapping("/student")
