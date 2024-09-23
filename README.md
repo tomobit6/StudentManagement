@@ -8,6 +8,9 @@
 ![スクリーンショット 2024-09-21 223948](https://github.com/user-attachments/assets/30b17709-642a-47d8-b564-257ff413c303)
 ## 学生情報の全件取得
 ![スクリーンショット 2024-09-21 224442](https://github.com/user-attachments/assets/be5b875b-1dec-43df-a981-1b3802ae2f18)
+## 学生情報の登録
+![スクリーンショット 2024-09-21 224145](https://github.com/user-attachments/assets/00a264a6-cf6f-413b-9f09-c460ec72d263)
+
 ## 学生情報の更新
 ![スクリーンショット 2024-09-21 224220](https://github.com/user-attachments/assets/46cbe2b1-b15d-4c04-b25a-e134bf90f9aa)
 ## 学生情報の削除
