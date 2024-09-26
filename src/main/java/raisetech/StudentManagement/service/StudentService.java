@@ -18,10 +18,10 @@ public class StudentService {
   public List<Student> searchStudentList() {
     List<Student> studentList = repository.search();
 
-    List<Student> in30s = studentList.stream()
+    List<Student> studentsAged25To29 = studentList.stream()
         .filter(student -> student.getAge() >= 25 && student.getAge() < 30)
         .toList();
-    return in30s;
+    return studentsAged25To29;
   }
 
   public List<StudentCourse> searchStudentCourseList() {
