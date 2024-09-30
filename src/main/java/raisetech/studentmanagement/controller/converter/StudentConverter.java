@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
-import raisetech.StudentManagement.data.Student;
-import raisetech.StudentManagement.data.StudentCourses;
-import raisetech.StudentManagement.domain.StudentDetail;
+import raisetech.studentmanagement.data.Student;
+import raisetech.studentmanagement.data.StudentCourses;
+import raisetech.studentmanagement.domain.StudentDetail;
 
 @Component
 public class StudentConverter {

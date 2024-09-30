@@ -1,11 +1,11 @@
-package raisetech.StudentManagement.repository;
+package raisetech.studentmanagement.repository;
 //データベースを操作するものだと思ったらいい
 
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
-import raisetech.StudentManagement.data.Student;
-import raisetech.StudentManagement.data.StudentCourses;
+import raisetech.studentmanagement.data.Student;
+import raisetech.studentmanagement.data.StudentCourses;
 
 /**
  * 受講生情報を扱うリポジトリ。
