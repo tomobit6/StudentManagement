@@ -1,10 +1,10 @@
-package raisetech.StudentManagement.service;
+package raisetech.studentmanagement.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
-import raisetech.StudentManagement.data.Student;
-import raisetech.StudentManagement.data.StudentCourses;
-import raisetech.StudentManagement.repository.StudentRepository;
+import raisetech.studentmanagement.data.Student;
+import raisetech.studentmanagement.data.StudentCourses;
+import raisetech.studentmanagement.repository.StudentRepository;
 
 @Service
 public class StudentService {
