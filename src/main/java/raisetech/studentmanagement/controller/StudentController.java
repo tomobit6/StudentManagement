@@ -44,6 +44,7 @@ public class StudentController {
   @GetMapping("/newStudent")
   public String newStudent(Model model) {
     StudentDetail studentDetail = new StudentDetail();
+    
     Student student = new Student();
     student.setGender("");
     student.setAge(null);
