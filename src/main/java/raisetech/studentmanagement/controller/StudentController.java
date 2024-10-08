@@ -61,9 +61,14 @@ public class StudentController {
   public String registerStudent(@ModelAttribute StudentDetail studentDetail,
       BindingResult result) {
     if (result.hasErrors()) {
+      System.out.println("エラー");
       return "registerStudent";
     }
+    System.out.println(studentDetail.getStudent().getName() + "さんが登録されました。");
     // 新規受講生情報を登録する処理を実装する。
+    Student student = studentDetail.getStudent();
+    // registerStudentメソッドを呼び出し、新規の受講生情報を変数studentとして渡す
+    service.registerStudent(student);
     // コース情報も一緒に登録できるように実装する。コースは単体で良い。
     return "redirect:/studentList";
   }
