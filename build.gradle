@@ -25,8 +25,11 @@ repositories {
 }
 
 dependencies {
+    //　Spring Boot
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    //便利機能、ユーティリティ
+    // ThymeLeaf
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.3.4'
+    //　便利機能、ユーティリティ
     implementation 'org.apache.commons:commons-lang3:3.17.0'
     // Lombok
     compileOnly 'org.projectlombok:lombok'
