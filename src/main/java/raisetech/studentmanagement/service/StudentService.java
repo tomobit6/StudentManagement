@@ -22,4 +22,9 @@ public class StudentService {
   public List<StudentCourses> searchStudentCoursesList() {
     return repository.searchStudentCourses();
   }
+
+  public void registerStudent(Student student) {
+    // repositoryのinsertStudentメソッドを呼び出し、新規の受講生情報を渡す。
+    repository.insertStudent(student);
+  }
 }
