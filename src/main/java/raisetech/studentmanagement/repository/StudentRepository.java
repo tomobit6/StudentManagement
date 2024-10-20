@@ -20,10 +20,13 @@ public interface StudentRepository {
   List<StudentCourses> searchStudentCourses();
 
   // students()の中身はテーブルのカラム名　valuesの後はstudentのデータ名
-  @Insert("INSERT INTO students(name,ruby,nickname,email,address,age,gender,remark) VALUES(#{name},#{ruby},#{nickname},#{email},#{address},#{age},#{gender},#{remark})")
+  @Insert("INSERT INTO students(name,ruby,nickname,email,address,age,gender,remark) "
+      + "VALUES(#{name},#{ruby},#{nickname},#{email},#{address},#{age},#{gender},#{remark})")
   @Options(useGeneratedKeys = true, keyProperty = "id")
   void insertStudent(Student student);
 
-  @Insert("INSERT INTO student_courses(student_id,course_name,start_date,end_date) VALUES(LAST_INSERT_ID(),#{course_name},#{start_date},#{end_date})")
+  @Insert("INSERT INTO students_courses(student_id,course_name,start_date,end_date) "
+      + "VALUES(LAST_INSERT_ID(),#{courseName},#{startDate},#{endDate})")
+  @Options(useGeneratedKeys = true,keyProperty = "id")
   void insertStudentCourse(StudentCourses studentCourses);
 }
