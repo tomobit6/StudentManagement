@@ -52,7 +52,7 @@ public class StudentController {
 
     StudentCourses studentCourse = new StudentCourses();
     studentCourse.setCourseName("");
-    studentDetail.setStudentCourse(new ArrayList<>(List.of(studentCourse)));
+    studentDetail.setStudentCourses(new ArrayList<>(List.of(studentCourse)));
     model.addAttribute("studentDetail", studentDetail);
     return "registerStudent";
   }
@@ -65,10 +65,8 @@ public class StudentController {
       return "registerStudent";
     }
     System.out.println(studentDetail.getStudent().getName() + "さんが登録されました。");
-    // 新規受講生情報を登録する処理を実装する。
-    Student student = studentDetail.getStudent();
-    // registerStudentメソッドを呼び出し、新規の受講生情報を変数studentとして渡す
-    service.registerStudent(student);
+    // registerStudentメソッドを呼び出し、新規の受講生情報を変数
+    service.registerStudent(studentDetail);
     // コース情報も一緒に登録できるように実装する。コースは単体で良い。
     return "redirect:/studentList";
   }
