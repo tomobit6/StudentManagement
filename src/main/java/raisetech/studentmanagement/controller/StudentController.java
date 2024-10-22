@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import raisetech.studentmanagement.controller.converter.StudentConverter;
 import raisetech.studentmanagement.data.Student;
@@ -35,11 +37,6 @@ public class StudentController {
     return "studentList";
   }
 
-  @GetMapping("/studentCourseList")
-  public List<StudentCourses> getStudentCoursesList() {
-    return service.searchStudentCoursesList();
-  }
-
 
   @GetMapping("/newStudent")
   public String newStudent(Model model) {
@@ -61,13 +58,34 @@ public class StudentController {
   public String registerStudent(@ModelAttribute StudentDetail studentDetail,
       BindingResult result) {
     if (result.hasErrors()) {
-      System.out.println("エラー");
+      System.out.println("StudentDetailのデータ処理中にエラー");
       return "registerStudent";
     }
     System.out.println(studentDetail.getStudent().getName() + "さんが登録されました。");
     // registerStudentメソッドを呼び出し、新規の受講生情報を変数
     service.registerStudent(studentDetail);
     // コース情報も一緒に登録できるように実装する。コースは単体で良い。
+    return "redirect:/studentList";
+  }
+
+
+  @GetMapping("/student/{id}")
+  public String getStudent(@PathVariable String id, Model model) {
+    StudentDetail studentDetail = service.searchStudent(id);
+    model.addAttribute("studentDetail", studentDetail);
+    return "updateStudent";
+  }
+
+  @PostMapping("/updateStudent")
+  // @ModelAttributeによりHTMLのrequestがstudentDetailのstudentに格納される。この引数のstudentDetailはth:object="${studentDetail}"と合わせる。
+  public String updateStudent(@ModelAttribute StudentDetail studentDetail,
+      BindingResult result) {
+    if (result.hasErrors()) {
+      System.out.println("StudentDetailのデータ処理中にエラー");
+      return "updateStudent";
+    }
+    System.out.println(studentDetail.getStudent().getName() + "さんが更新されました。");
+    service.updateStudent(studentDetail);
     return "redirect:/studentList";
   }
 }
