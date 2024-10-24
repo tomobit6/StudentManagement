@@ -18,12 +18,16 @@
     <th>年齢</th>
     <th>性別</th>
     <th>備考</th>
+    <th>コース名</th>
   </tr>
   </thead>
   <tbody>
   <tr th:each="studentDetail : ${studentList}">
     <td th:text="${studentDetail.student.id}">001</td>
-    <td th:text="${studentDetail.student.name}">鈴木一郎</td>
+    <td>
+      <a th:href="@{/student/{id}(id=${studentDetail.student.id})}"
+         th:text="${studentDetail.student.name}">鈴木一郎</a>
+    </td>
     <td th:text="${studentDetail.student.ruby}">スズキイチロウ</td>
     <td th:text="${studentDetail.student.nickname}">いっちゃん</td>
     <td th:text="${studentDetail.student.email}">ichiro@examle.com</td>
@@ -31,6 +35,11 @@
     <td th:text="${studentDetail.student.age}">20</td>
     <td th:text="${studentDetail.student.gender}">男性</td>
     <td th:text="${studentDetail.student.remark}">特になし</td>
+    <td>
+      <ul>
+        <li th:each="course : ${studentDetail.studentCourses}" th:text="${course.courseName}">バックエンド開発</li>
+      </ul>
+    </td>
   </tr>
   </tbody>
 </table>
