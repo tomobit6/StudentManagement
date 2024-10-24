@@ -58,13 +58,9 @@ public class StudentController {
   public String registerStudent(@ModelAttribute StudentDetail studentDetail,
       BindingResult result) {
     if (result.hasErrors()) {
-      System.out.println("StudentDetailのデータ処理中にエラー");
       return "registerStudent";
     }
-    System.out.println(studentDetail.getStudent().getName() + "さんが登録されました。");
-    // registerStudentメソッドを呼び出し、新規の受講生情報を変数
     service.registerStudent(studentDetail);
-    // コース情報も一緒に登録できるように実装する。コースは単体で良い。
     return "redirect:/studentList";
   }
 
@@ -81,10 +77,8 @@ public class StudentController {
   public String updateStudent(@ModelAttribute StudentDetail studentDetail,
       BindingResult result) {
     if (result.hasErrors()) {
-      System.out.println("StudentDetailのデータ処理中にエラー");
       return "updateStudent";
     }
-    System.out.println(studentDetail.getStudent().getName() + "さんが更新されました。");
     service.updateStudent(studentDetail);
     return "redirect:/studentList";
   }
