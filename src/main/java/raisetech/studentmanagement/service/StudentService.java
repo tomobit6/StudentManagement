@@ -4,49 +4,65 @@ import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import raisetech.studentmanagement.controller.converter.StudentConverter;
 import raisetech.studentmanagement.data.Student;
 import raisetech.studentmanagement.data.StudentCourses;
 import raisetech.studentmanagement.domain.StudentDetail;
 import raisetech.studentmanagement.repository.StudentRepository;
 
+/**
+ * 受講生情報を取り扱うサービスです。
+ * 受講生の検索や登録・更新処理を行います。
+ */
 @Service
 public class StudentService {
 
   private StudentRepository repository;
+  private StudentConverter converter;
 
-  public StudentService(StudentRepository repository) {
+  public StudentService(StudentRepository repository, StudentConverter converter) {
     this.repository = repository;
+    this.converter = converter;
   }
 
-  public List<Student> searchStudentList() {
-    return repository.search();
+  /**
+   * 受講生一覧検索です。
+   * 全件検索を行うので、条件指定は行いません。
+   *
+   * @return 受講生一覧（全件）
+   */
+  public List<StudentDetail> searchStudentList() {
+    List<Student>studentList = repository.search();
+    List<StudentCourses> studentCoursesList =repository.searchStudentCoursesList();
+    return converter.convertStudentDetails(studentList, studentCoursesList);
   }
 
-  public List<StudentCourses> searchStudentCoursesList() {
-    return repository.searchStudentCoursesList();
+  /**
+   * 受講生検索です。
+   * IDに紐づく
+   *受講生情報を取得した後、その受講生に紐づくコース情報を取得して設定します。
+   * @param id 受講生ID
+   * @return 受講生
+   */
+  public StudentDetail searchStudent(String id){
+    Student student = repository.searchStudent(id);
+    List<StudentCourses> studentCourses = repository.searchStudentCourses(student.getId());
+    return new StudentDetail(student,studentCourses);
   }
+
 
   @Transactional
-  public void registerStudent(StudentDetail studentDetail) {
-    // repositoryのinsertStudentメソッドを呼び出し、新規の受講生情報を渡す。
+  public StudentDetail registerStudent(StudentDetail studentDetail) {
     repository.insertStudent(studentDetail.getStudent());
-    // TODO:コース情報管理を扱う。
     for(StudentCourses studentCourses :studentDetail.getStudentCourses()){
       studentCourses.setStudentId(studentDetail.getStudent().getId());
       studentCourses.setStartDate(LocalDate.now());
       studentCourses.setEndDate(LocalDate.now().plusYears(1));
     repository.insertStudentCourse(studentCourses);
     }
-  }
-
-  public StudentDetail searchStudent(String id){
-    Student student = repository.searchStudent(id);
-    List<StudentCourses> studentCourses = repository.searchStudentCourses(student.getId());
-    StudentDetail studentDetail =new StudentDetail();
-    studentDetail.setStudent(student);
-    studentDetail.setStudentCourses(studentCourses);
     return studentDetail;
   }
+
 
   @Transactional
   public void updateStudent(StudentDetail studentDetail){
