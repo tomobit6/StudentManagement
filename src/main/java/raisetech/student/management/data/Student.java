@@ -1,4 +1,4 @@
-package raisetech.studentmanagement.data;
+package raisetech.student.management.data;
 
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Email;
