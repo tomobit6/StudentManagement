@@ -4,8 +4,10 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import raisetech.student.management.domain.StudentDetail;
+import raisetech.student.management.exception.TestException;
 import raisetech.student.management.service.StudentService;
 
 /**
@@ -52,6 +55,11 @@ public class StudentController {
   @GetMapping("/student/{id}")
   public StudentDetail getStudent(@PathVariable @Size(min=1,max= 3) String id) {
     return service.searchStudent(id);
+  }
+
+  @GetMapping("/studentPlaceOfEmployment")
+  public StudentDetail getStudentPlaceOfEmployment() throws TestException {
+    throw  new TestException("現在準備中です。");
   }
 
   /**
