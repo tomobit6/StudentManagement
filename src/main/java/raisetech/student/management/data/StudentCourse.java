@@ -12,7 +12,6 @@ public class StudentCourse {
 
   private String id;
   private String studentId;
-  @NotBlank
   private String courseName;
   private LocalDate startDate;
   private LocalDate endDate;

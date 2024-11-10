@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import raisetech.student.management.domain.StudentDetail;
+import raisetech.student.management.exception.NotFoundException;
 import raisetech.student.management.exception.TestException;
+import raisetech.student.management.exception.invalidDataException;
 import raisetech.student.management.service.StudentService;
 
 /**
@@ -41,7 +43,7 @@ public class StudentController {
    * @return 受講生詳細一覧（全件）
    */
   @GetMapping("/studentList")
-  public List<StudentDetail> getStudentList() {
+  public List<StudentDetail> getStudentList() throws invalidDataException {
     return service.searchStudentList();
   }
 
@@ -53,13 +55,19 @@ public class StudentController {
    * @return 受講生
    */
   @GetMapping("/student/{id}")
-  public StudentDetail getStudent(@PathVariable @Size(min=1,max= 3) String id) {
+  public StudentDetail getStudent(@PathVariable @Size(min=1,max= 3) String id)
+      throws NotFoundException {
     return service.searchStudent(id);
   }
 
+  /**
+   * わざと例外処理を発生させるためのURLです。
+   *
+   * @throws TestException
+   */
   @GetMapping("/studentPlaceOfEmployment")
   public StudentDetail getStudentPlaceOfEmployment() throws TestException {
-    throw  new TestException("現在準備中です。");
+    throw  new TestException("受講生の就職先情報は現在準備中です。");
   }
 
   /**
