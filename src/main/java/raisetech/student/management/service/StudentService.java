@@ -9,8 +9,7 @@ import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
 import raisetech.student.management.domain.StudentDetail;
 import raisetech.student.management.exception.NotFoundException;
-import raisetech.student.management.exception.TestException;
-import raisetech.student.management.exception.invalidDataException;
+import raisetech.student.management.exception.InvalidDataException;
 import raisetech.student.management.repository.StudentRepository;
 
 /**
@@ -34,7 +33,7 @@ public class StudentService {
    *
    * @return 受講生詳細一覧（全件）
    */
-  public List<StudentDetail> searchStudentList() throws invalidDataException {
+  public List<StudentDetail> searchStudentList() throws InvalidDataException {
     List<Student>studentList = repository.search();
     List<StudentCourse> studentCourseList =repository.searchStudentCourseList();
     return converter.convertStudentDetails(studentList, studentCourseList);

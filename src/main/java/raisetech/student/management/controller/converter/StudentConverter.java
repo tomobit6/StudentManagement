@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
 import raisetech.student.management.domain.StudentDetail;
-import raisetech.student.management.exception.invalidDataException;
+import raisetech.student.management.exception.InvalidDataException;
 
 /**
  * 受講生詳細を受講生や受講生コース情報、もしくはその逆の変換を行うコンバーターです。
@@ -24,9 +24,9 @@ public class StudentConverter {
    * @return 受講生詳細情報のリスト
    */
   public List<StudentDetail> convertStudentDetails(List<Student> studentList,
-      List<StudentCourse> studentCourseList) throws invalidDataException {
+      List<StudentCourse> studentCourseList) throws InvalidDataException {
     if (studentList == null || studentCourseList == null) {
-      throw new invalidDataException("受講生情報または受講生コース情報がnullです。");
+      throw new InvalidDataException("受講生情報または受講生コース情報がnullです。");
     }
     List<StudentDetail> studentDetails = new ArrayList<>();
     studentList.forEach(student -> {
