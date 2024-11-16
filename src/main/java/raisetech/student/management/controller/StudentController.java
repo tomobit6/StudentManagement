@@ -45,7 +45,7 @@ public class StudentController {
    * @return 受講生詳細一覧（全件）
    */
   @Operation(summary = "一覧検索",description = "受講生の一覧を検索します。")
-  @GetMapping("/studentList")
+  @GetMapping("/students")
   public List<StudentDetail> getStudentList() throws InvalidDataException {
     return service.searchStudentList();
   }
@@ -59,7 +59,7 @@ public class StudentController {
    */
   @Operation(summary = "受講生検索",description = "IDに紐づく任意の受講生を検索します。")
   @ApiResponse(responseCode = "404",description = "ユーザーが見つかりません。")
-  @GetMapping("/student/{id}")
+  @GetMapping("/students/{id}")
   public StudentDetail getStudent(
       @Parameter(description = "受講生ID",required = true)
       @PathVariable @Size(min=1,max= 3) String id)
@@ -73,9 +73,9 @@ public class StudentController {
    * @throws TestException
    */
   @Operation(summary = "受講生の就職先一覧検索",description = "受講生の就職先一覧を検索します。")
-  @ApiResponse(responseCode = "400",description = "現在準備中")
-  @GetMapping("/studentPlaceOfEmploymentList")
-  public StudentDetail getStudentPlaceOfEmploymentList() throws TestException {
+  @ApiResponse(responseCode = "400",description = "リクエストが無効です。")
+  @GetMapping("/jobs")
+  public StudentDetail getJobs() throws TestException {
     throw  new TestException("受講生の就職先情報は現在準備中です。");
   }
 
