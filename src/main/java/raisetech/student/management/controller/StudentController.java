@@ -1,5 +1,9 @@
 package raisetech.student.management.controller;
 
+import com.sun.source.doctree.SummaryTree;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import java.util.List;
@@ -40,7 +44,8 @@ public class StudentController {
    *
    * @return 受講生詳細一覧（全件）
    */
-  @GetMapping("/studentList")
+  @Operation(summary = "一覧検索",description = "受講生の一覧を検索します。")
+  @GetMapping("/students")
   public List<StudentDetail> getStudentList() throws InvalidDataException {
     return service.searchStudentList();
   }
@@ -52,8 +57,12 @@ public class StudentController {
    * @param id 受講生ID
    * @return 受講生
    */
-  @GetMapping("/student/{id}")
-  public StudentDetail getStudent(@PathVariable @Size(min=1,max= 3) String id)
+  @Operation(summary = "受講生検索",description = "IDに紐づく任意の受講生を検索します。")
+  @ApiResponse(responseCode = "404",description = "ユーザーが見つかりません。")
+  @GetMapping("/students/{id}")
+  public StudentDetail getStudent(
+      @Parameter(description = "受講生ID",required = true)
+      @PathVariable @Size(min=1,max= 3) String id)
       throws NotFoundException {
     return service.searchStudent(id);
   }
@@ -63,8 +72,10 @@ public class StudentController {
    *
    * @throws TestException
    */
-  @GetMapping("/studentPlaceOfEmployment")
-  public StudentDetail getStudentPlaceOfEmployment() throws TestException {
+  @Operation(summary = "受講生の就職先一覧検索",description = "受講生の就職先一覧を検索します。")
+  @ApiResponse(responseCode = "400",description = "リクエストが無効です。")
+  @GetMapping("/jobs")
+  public StudentDetail getJobs() throws TestException {
     throw  new TestException("受講生の就職先情報は現在準備中です。");
   }
 
@@ -73,6 +84,7 @@ public class StudentController {
    * @param studentDetail 受講生詳細
    * @return 実行結果
    */
+  @Operation(summary = "受講生登録",description = "受講生を登録します。")
   @PostMapping("/registerStudent")
   public ResponseEntity<StudentDetail>registerStudent(@RequestBody @Valid StudentDetail studentDetail) {
    StudentDetail responseStudentDetail = service.registerStudent(studentDetail);
@@ -86,6 +98,7 @@ public class StudentController {
    * @param studentDetail 受講生詳細
    * @return 実行結果
    */
+  @Operation(summary = "受講生更新",description = "受講生を更新します。")
   @PutMapping("/updateStudent")
   public ResponseEntity<String>updateStudent(@RequestBody @Valid StudentDetail studentDetail) {
     service.updateStudent(studentDetail);
