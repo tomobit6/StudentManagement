@@ -1,6 +1,5 @@
 package raisetech.student.management.controller;
 
-import com.sun.source.doctree.SummaryTree;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import raisetech.student.management.domain.StudentDetail;
 import raisetech.student.management.exception.NotFoundException;
 import raisetech.student.management.exception.TestException;
-import raisetech.student.management.exception.InvalidDataException;
 import raisetech.student.management.service.StudentService;
 
 /**
@@ -46,7 +44,7 @@ public class StudentController {
    */
   @Operation(summary = "一覧検索",description = "受講生の一覧を検索します。")
   @GetMapping("/students")
-  public List<StudentDetail> getStudentList() throws InvalidDataException {
+  public List<StudentDetail> getStudentList() {
     return service.searchStudentList();
   }
 
