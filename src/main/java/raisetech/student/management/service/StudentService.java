@@ -9,7 +9,6 @@ import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
 import raisetech.student.management.domain.StudentDetail;
 import raisetech.student.management.exception.NotFoundException;
-import raisetech.student.management.exception.InvalidDataException;
 import raisetech.student.management.repository.StudentRepository;
 
 /**
@@ -33,7 +32,7 @@ public class StudentService {
    *
    * @return 受講生詳細一覧（全件）
    */
-  public List<StudentDetail> searchStudentList() throws InvalidDataException {
+  public List<StudentDetail> searchStudentList() {
     List<Student>studentList = repository.search();
     List<StudentCourse> studentCourseList =repository.searchStudentCourseList();
     return converter.convertStudentDetails(studentList, studentCourseList);
@@ -79,7 +78,7 @@ public class StudentService {
    * @param studentCourse 受講生コース情報
    * @param student　受講生
    */
-  private void initStudentCourse(StudentCourse studentCourse, Student student) {
+  void initStudentCourse(StudentCourse studentCourse, Student student) {
     studentCourse.setStudentId(student.getId());
     LocalDate now = LocalDate.now();
 

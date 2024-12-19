@@ -17,9 +17,4 @@ public class Handler {
   public ResponseEntity<String> handleNotFoundException(NotFoundException ex){
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body((ex.getMessage()));
   }
-
-  @ExceptionHandler(InvalidDataException.class)
-  public ResponseEntity<String> handleInvalidDataException(InvalidDataException ex){
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("予期しないエラーが発生しました: " + ex.getMessage());
-  }
 }
