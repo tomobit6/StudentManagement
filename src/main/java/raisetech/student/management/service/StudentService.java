@@ -65,10 +65,10 @@ public class StudentService {
     Student student = studentDetail.getStudent();
 
     repository.insertStudent(student);
-    studentDetail.getStudentCourseList().forEach(studentCourse -> {
+    for (StudentCourse studentCourse : studentDetail.getStudentCourseList()) {
       initStudentCourse(studentCourse, student);
       repository.insertStudentCourse(studentCourse);
-    });
+    }
     return studentDetail;
   }
 
