@@ -42,6 +42,31 @@ class StudentServiceTest {
     sut = new StudentService(repository, converter);
   }
 
+  // 受講生データを作成するメソッド
+  private Student createStudent() {
+    Student student = new Student();
+    student.setId("1");
+    student.setName("仮名前");
+    student.setRuby("かりなまえ");
+    student.setNickname("仮");
+    student.setEmail("karinamae@example.com");
+    student.setAddress("高知県高知市");
+    student.setAge(15);
+    student.setGender("男");
+    return student;
+  }
+
+  // 受講生のコースデータを作成するメソッド
+  private StudentCourse createStudentCourse(Student student) {
+    StudentCourse studentCourse = new StudentCourse();
+    studentCourse.setId(student.getId());
+    studentCourse.setStudentId(student.getId());
+    studentCourse.setCourseName("Javaコース");
+    studentCourse.setStartDate(LocalDate.of(2024, 1, 1));
+    studentCourse.setEndDate(LocalDate.of(2024, 12, 31));
+    return studentCourse;
+  }
+
   @Test
   void 受講生詳細一覧検索_正常系_リポジトリとコンバーターの処理が適切に呼び出されていること() {
     // 事前準備
@@ -112,24 +137,11 @@ class StudentServiceTest {
   @Test
   void 受講生詳細登録_正常系_リポジトリの処理が適切に呼び出せていること() {
     // 事前準備
-    Student student = new Student();
-    student.setId("1");
-    student.setName("仮名前");
-    student.setRuby("かりなまえ");
-    student.setNickname("仮");
-    student.setEmail("karinamae@example.com");
-    student.setAddress("高知県高知市");
-    student.setAge(15);
-    student.setGender("男");
+    Student student = createStudent();
 
-    StudentCourse studentCourse = new StudentCourse();
-    studentCourse.setId(student.getId());
-    studentCourse.setStudentId(student.getId());
-    studentCourse.setCourseName("Javaコース");
-    studentCourse.setStartDate(LocalDate.of(2024, 1, 1));
-    studentCourse.setEndDate(LocalDate.of(2024, 12, 31));
-
+    StudentCourse studentCourse = createStudentCourse(student);
     List<StudentCourse> studentCourseList = List.of(studentCourse);
+
     StudentDetail studentDetail = new StudentDetail(student, studentCourseList);
 
     // 実行
@@ -170,9 +182,9 @@ class StudentServiceTest {
   @Test
   void 受講生詳細更新_正常系_リポジトリの処理が適切に呼び出せていること() {
     // 事前準備
-    Student student = new Student();
+    Student student = createStudent();
 
-    StudentCourse studentCourse = new StudentCourse();
+    StudentCourse studentCourse = createStudentCourse(student);
     List<StudentCourse> studentCourseList = List.of(studentCourse);
 
     StudentDetail studentDetail = new StudentDetail(student, studentCourseList);
