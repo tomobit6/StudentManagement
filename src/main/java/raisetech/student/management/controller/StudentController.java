@@ -41,7 +41,7 @@ public class StudentController {
    * @return 受講生詳細一覧（全件）
    */
   @Operation(summary = "一覧検索", description = "受講生の一覧を検索します。")
-  @GetMapping("/students")
+  @GetMapping({"/students", "/students/"}) // 末尾の/の有無で異なる動作をするため、/有でも一覧検索が返ってくるように指定。
   public List<StudentDetail> getStudentList() {
     return service.searchStudentList();
   }
@@ -57,7 +57,7 @@ public class StudentController {
   @GetMapping("/students/{id}")
   public StudentDetail getStudent(
       @Parameter(description = "受講生ID", required = true)
-      @PathVariable @Pattern(regexp = "^\\d{1,}$", message = "数字のみで入力してください。") String id)
+      @PathVariable @Pattern(regexp = "^\\d+$", message = "数字のみで入力してください。") String id)
       throws NotFoundException {
     return service.searchStudent(id);
   }

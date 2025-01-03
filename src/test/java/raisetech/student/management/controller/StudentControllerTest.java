@@ -6,15 +6,13 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import java.util.List;
-import java.util.Set;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -40,7 +38,7 @@ class StudentControllerTest {
 
   @Test
   void 受講生詳細一覧検索_正常系_実行できて空のリストが返ってくること() throws Exception {
-    mockMvc.perform(get("/students"))
+    mockMvc.perform(get("/students", "/students/")) // ID未指定の場合、受講生一覧検索エンドポイントを呼び出す。
         .andExpect(status().isOk());
 
     verify(service, times(1)).searchStudentList();
@@ -56,20 +54,11 @@ class StudentControllerTest {
   }
 
   @Test
-  void 受講生詳細検索_異常系_受講生IDが空白だった場合に入力チェックが掛かること() {
-    Student student = new Student();
-    student.setId("");
-    student.setName("仮名前");
-    student.setRuby("かりなまえ");
-    student.setNickname("仮");
-    student.setEmail("karinamae@example.com");
-    student.setAddress("高知県高知市");
-    student.setAge(15);
-    student.setGender("男");
-
-    Set<ConstraintViolation<Student>> violations = validator.validate(student);
-
-    Assertions.assertEquals(1, violations.size());
+  void 受講生詳細検索_異常系_受講生IDに数字以外が入力された場合に入力チェックが掛かること()
+      throws Exception {
+    mockMvc.perform(get("/students/{id}", "abc"))
+        .andExpect(status().isBadRequest())
+        .andExpect(content().string("getStudent.id: 数字のみで入力してください。"));
   }
 
   @Test
@@ -97,10 +86,74 @@ class StudentControllerTest {
   }
 
   @Test
-  public void 受講生詳細登録_異常系_バリデーションエラー() throws Exception {
+  public void 受講生詳細登録_異常系_nameが空白だった場合のバリデーションエラー() throws Exception {
     mockMvc.perform(post("/registerStudent")
             .contentType(MediaType.APPLICATION_JSON)
             .content("{\"student\":{\"name\":\"\"}}"))
+        .andExpect(status().isBadRequest());
+    
+    verify(service, times(0)).registerStudent(any(StudentDetail.class));
+  }
+
+  @Test
+  public void 受講生詳細登録_異常系_rubyが空白だった場合のバリデーションエラー() throws Exception {
+    mockMvc.perform(post("/registerStudent")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{\"student\":{\"ruby\":\"\"}}"))
+        .andExpect(status().isBadRequest());
+
+    verify(service, times(0)).registerStudent(any(StudentDetail.class));
+  }
+
+  @Test
+  public void 受講生詳細登録_異常系_rubyがひらがな以外だった場合のバリデーションエラー()
+      throws Exception {
+    mockMvc.perform(post("/registerStudent")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{\"student\":{\"ruby\":\"カリナマエ\"}}"))
+        .andExpect(status().isBadRequest());
+
+    verify(service, times(0)).registerStudent(any(StudentDetail.class));
+  }
+
+  @Test
+  public void 受講生詳細登録_異常系_emailが空白だった場合のバリデーションエラー() throws Exception {
+    mockMvc.perform(post("/registerStudent")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{\"student\":{\"email\":\"\"}}"))
+        .andExpect(status().isBadRequest());
+
+    verify(service, times(0)).registerStudent(any(StudentDetail.class));
+  }
+
+  @Test
+  public void 受講生詳細登録_異常系_emailが有効なメールアドレスではなかった場合のバリデーションエラー()
+      throws Exception {
+    mockMvc.perform(post("/registerStudent")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{\"student\":{\"email\":\"karinamae-example.com\"}}"))
+        .andExpect(status().isBadRequest());
+
+    verify(service, times(0)).registerStudent(any(StudentDetail.class));
+  }
+
+  @Test
+  public void 受講生詳細登録_異常系_ageが10歳以上99歳以下でない場合のバリデーションエラー()
+      throws Exception {
+    mockMvc.perform(post("/registerStudent")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{\"student\":{\"age\":\"5\"}}"))
+        .andExpect(status().isBadRequest());
+
+    verify(service, times(0)).registerStudent(any(StudentDetail.class));
+  }
+
+  @Test
+  public void 受講生詳細登録_異常系_genderが男性か女性かその他でない場合のバリデーションエラー()
+      throws Exception {
+    mockMvc.perform(post("/registerStudent")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{\"student\":{\"gender\":\"性別\"}}"))
         .andExpect(status().isBadRequest());
 
     verify(service, times(0)).registerStudent(any(StudentDetail.class));
@@ -131,10 +184,74 @@ class StudentControllerTest {
   }
 
   @Test
-  public void 受講生詳細更新_異常系_バリデーションエラー() throws Exception {
+  public void 受講生詳細更新_異常系_nameが空白だった場合のバリデーションエラー() throws Exception {
     mockMvc.perform(put("/updateStudent")
             .contentType(MediaType.APPLICATION_JSON)
-            .content("{\"student\":\"email\":\"invalid-email\"}"))
+            .content("{\"student\":{\"name\":\"\"}}"))
+        .andExpect(status().isBadRequest());
+
+    verify(service, times(0)).updateStudent(any(StudentDetail.class));
+  }
+
+  @Test
+  public void 受講生詳細更新_異常系_rubyが空白だった場合のバリデーションエラー() throws Exception {
+    mockMvc.perform(put("/updateStudent")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{\"student\":{\"ruby\":\"\"}}"))
+        .andExpect(status().isBadRequest());
+
+    verify(service, times(0)).updateStudent(any(StudentDetail.class));
+  }
+
+  @Test
+  public void 受講生詳細更新_異常系_rubyがひらがな以外だった場合のバリデーションエラー()
+      throws Exception {
+    mockMvc.perform(put("/updateStudent")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{\"student\":{\"ruby\":\"カリナマエ\"}}"))
+        .andExpect(status().isBadRequest());
+
+    verify(service, times(0)).updateStudent(any(StudentDetail.class));
+  }
+
+  @Test
+  public void 受講生詳細更新_異常系_emailが空白だった場合のバリデーションエラー() throws Exception {
+    mockMvc.perform(put("/updateStudent")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{\"student\":{\"email\":\"\"}}"))
+        .andExpect(status().isBadRequest());
+
+    verify(service, times(0)).updateStudent(any(StudentDetail.class));
+  }
+
+  @Test
+  public void 受講生詳細更新_異常系_emailが有効なメールアドレスではなかった場合のバリデーションエラー()
+      throws Exception {
+    mockMvc.perform(put("/updateStudent")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{\"student\":{\"email\":\"karinamae-example.com\"}}"))
+        .andExpect(status().isBadRequest());
+
+    verify(service, times(0)).updateStudent(any(StudentDetail.class));
+  }
+
+  @Test
+  public void 受講生詳細更新_異常系_ageが10歳以上99歳以下でない場合のバリデーションエラー()
+      throws Exception {
+    mockMvc.perform(put("/updateStudent")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{\"student\":{\"age\":\"100\"}}"))
+        .andExpect(status().isBadRequest());
+
+    verify(service, times(0)).updateStudent(any(StudentDetail.class));
+  }
+
+  @Test
+  public void 受講生詳細更新_異常系_gender男性か女性かその他でない場合のバリデーションエラー()
+      throws Exception {
+    mockMvc.perform(put("/updateStudent")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{\"student\":{\"gender\":\"性別\"}}"))
         .andExpect(status().isBadRequest());
 
     verify(service, times(0)).updateStudent(any(StudentDetail.class));
