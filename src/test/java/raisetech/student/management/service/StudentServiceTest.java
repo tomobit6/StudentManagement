@@ -3,7 +3,6 @@ package raisetech.student.management.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -43,27 +42,33 @@ class StudentServiceTest {
     sut = new StudentService(repository, converter);
   }
 
-  @Test
-  void 受講生詳細一覧検索_リポジトリとコンバーターの処理が適切に呼び出されていること() {
-    // 事前準備
-    List<Student> studentList = new ArrayList<>();
-    List<StudentCourse> studentCourseList = new ArrayList<>();
+  // 受講生データを作成するメソッド
+  private Student createStudent() {
+    Student student = new Student();
+    student.setId("1");
+    student.setName("仮名前");
+    student.setRuby("かりなまえ");
+    student.setNickname("仮");
+    student.setEmail("karinamae@example.com");
+    student.setAddress("高知県高知市");
+    student.setAge(15);
+    student.setGender("男");
+    return student;
+  }
 
-    // モックの設定
-    when(repository.search()).thenReturn(studentList);
-    when(repository.searchStudentCourseList()).thenReturn(studentCourseList);
-
-    // 実行
-    sut.searchStudentList();
-
-    // 検証
-    verify(repository, times(1)).search();
-    verify(repository, times(1)).searchStudentCourseList();
-    verify(converter, times(1)).convertStudentDetails(studentList, studentCourseList);
+  // 受講生のコースデータを作成するメソッド
+  private StudentCourse createStudentCourse(Student student) {
+    StudentCourse studentCourse = new StudentCourse();
+    studentCourse.setId(student.getId());
+    studentCourse.setStudentId(student.getId());
+    studentCourse.setCourseName("Javaコース");
+    studentCourse.setStartDate(LocalDate.of(2024, 1, 1));
+    studentCourse.setEndDate(LocalDate.of(2024, 12, 31));
+    return studentCourse;
   }
 
   @Test
-  void 受講生詳細一覧検索_戻り値が正しいこと() {
+  void 受講生詳細一覧検索_正常系_リポジトリとコンバーターの処理が適切に呼び出されていること() {
     // 事前準備
     List<Student> studentList = new ArrayList<>();
     List<StudentCourse> studentCourseList = new ArrayList<>();
@@ -78,6 +83,10 @@ class StudentServiceTest {
     List<StudentDetail> actual = sut.searchStudentList();
 
     // 検証
+    verify(repository, times(1)).search();
+    verify(repository, times(1)).searchStudentCourseList();
+    verify(converter, times(1)).convertStudentDetails(studentList, studentCourseList);
+
     assertEquals(expected, actual);
   }
 
@@ -87,45 +96,10 @@ class StudentServiceTest {
     // 事前準備
     String id = "1";
     Student student = new Student();
-    List<StudentCourse> studentCourse = new ArrayList<>();
-
-    // モックの設定
-    when(repository.searchStudent(id)).thenReturn(student);
-    when(repository.searchStudentCourse(student.getId())).thenReturn(studentCourse);
-
-    // 実行
-    sut.searchStudent(id);
-
-    // 検証
-    verify(repository, times(1)).searchStudent(id);
-    verify(repository, times(1)).searchStudentCourse(student.getId());
-  }
-
-  @Test
-  void 受講生詳細検索_戻り値が正しいこと()
-      throws NotFoundException {
-    // 事前準備
-    String id = "1";
-
-    Student student = new Student();
-    student.setId(id);
-    student.setName("仮名前");
-    student.setRuby("かりなまえ");
-    student.setNickname("仮");
-    student.setEmail("karinamae@example.com");
-    student.setAddress("高知県高知市");
-    student.setAge(15);
-    student.setGender("男");
 
     StudentCourse studentCourse = new StudentCourse();
-    studentCourse.setId("1");
-    studentCourse.setStudentId(student.getId());
-    studentCourse.setCourseName("Javaコース");
-    studentCourse.setStartDate(LocalDate.of(2024, 1, 1));
-    studentCourse.setEndDate(LocalDate.of(2024, 12, 31));
 
-    List<StudentCourse> studentCourseList = new ArrayList<>();
-    studentCourseList.add(studentCourse);
+    List<StudentCourse> studentCourseList = List.of(studentCourse);
 
     // モックの設定
     when(repository.searchStudent(id)).thenReturn(student);
@@ -135,12 +109,15 @@ class StudentServiceTest {
     StudentDetail actual = sut.searchStudent(id);
 
     // 検証
+    verify(repository, times(1)).searchStudent(id);
+    verify(repository, times(1)).searchStudentCourse(student.getId());
+
     assertEquals(student, actual.getStudent());
     assertEquals(studentCourseList, actual.getStudentCourseList());
   }
 
   @Test
-  void 受講生詳細検索_学生が見つからない場合正しく例外がスローされること()
+  void 受講生詳細検索_異常系_学生が見つからない場合正しく例外がスローされること()
       throws NotFoundException {
     // 事前準備
     String id = "1";
@@ -158,48 +135,12 @@ class StudentServiceTest {
   }
 
   @Test
-  void 受講生詳細登録_リポジトリの処理が適切に呼び出せていること() {
+  void 受講生詳細登録_正常系_リポジトリの処理が適切に呼び出せていること() {
     // 事前準備
-    Student student = new Student();
-    List<StudentCourse> studentCourseList = new ArrayList<>();
-    StudentDetail studentDetail = new StudentDetail(student, studentCourseList);
+    Student student = createStudent();
 
-    // モックの設定
-    StudentService spy = spy(sut);
-
-    // 実行
-    sut.registerStudent(studentDetail);
-
-    // 検証
-    verify(repository, times(1)).insertStudent(studentDetail.getStudent());
-    verify(spy, times(studentCourseList.size())).initStudentCourse(any(StudentCourse.class),
-        eq(student));
-    verify(repository, times(studentCourseList.size())).insertStudentCourse(
-        any(StudentCourse.class));
-  }
-
-  @Test
-  void 受講生詳細登録_戻り値が正しいこと() {
-    // 事前準備
-    Student student = new Student();
-    student.setId("1");
-    student.setName("仮名前");
-    student.setRuby("かりなまえ");
-    student.setNickname("仮");
-    student.setEmail("karinamae@example.com");
-    student.setAddress("高知県高知市");
-    student.setAge(15);
-    student.setGender("男");
-
-    StudentCourse studentCourse = new StudentCourse();
-    studentCourse.setId("1");
-    studentCourse.setStudentId(student.getId());
-    studentCourse.setCourseName("Javaコース");
-    studentCourse.setStartDate(LocalDate.of(2024, 1, 1));
-    studentCourse.setEndDate(LocalDate.of(2024, 12, 31));
-
-    List<StudentCourse> studentCourseList = new ArrayList<>();
-    studentCourseList.add(studentCourse);
+    StudentCourse studentCourse = createStudentCourse(student);
+    List<StudentCourse> studentCourseList = List.of(studentCourse);
 
     StudentDetail studentDetail = new StudentDetail(student, studentCourseList);
 
@@ -207,11 +148,15 @@ class StudentServiceTest {
     StudentDetail actual = sut.registerStudent(studentDetail);
 
     // 検証
+    verify(repository, times(1)).insertStudent(studentDetail.getStudent());
+    verify(repository, times(studentCourseList.size())).insertStudentCourse(
+        any(StudentCourse.class));
+
     assertEquals(studentDetail, actual);
   }
 
   @Test
-  void 受講生コース情報登録_適切に情報が渡されていること() {
+  void 受講生コース情報登録_正常系_適切に情報が渡されていること() {
     // 事前準備
     StudentCourse studentCourse = new StudentCourse();
     String studentId = "1";
@@ -235,23 +180,21 @@ class StudentServiceTest {
   }
 
   @Test
-  void 受講生詳細更新_リポジトリの処理が適切に呼び出せていること() {
+  void 受講生詳細更新_正常系_リポジトリの処理が適切に呼び出せていること() {
     // 事前準備
-    StudentDetail studentDetail = new StudentDetail();
+    Student student = createStudent();
 
-    Student student = new Student();
-    studentDetail.setStudent(student);
+    StudentCourse studentCourse = createStudentCourse(student);
+    List<StudentCourse> studentCourseList = List.of(studentCourse);
 
-    StudentCourse studentCourse = new StudentCourse();
-    List<StudentCourse> studentCourseList = new ArrayList<>();
-    studentCourseList.add(studentCourse);
-    studentDetail.setStudentCourseList(studentCourseList);
+    StudentDetail studentDetail = new StudentDetail(student, studentCourseList);
 
     // 実行
     sut.updateStudent(studentDetail);
 
     // 検証
-    verify(repository, times(1)).updateStudent(studentDetail.getStudent());
-    verify(repository, times(1)).updateStudentCourse(studentCourse);
+    verify(repository, times(1)).updateStudent(student);
+    verify(repository, times(studentCourseList.size())).updateStudentCourse(
+        any(StudentCourse.class));
   }
 }
