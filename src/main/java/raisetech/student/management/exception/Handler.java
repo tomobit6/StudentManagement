@@ -1,6 +1,10 @@
 package raisetech.student.management.exception;
 
 import jakarta.validation.ConstraintViolationException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -11,29 +15,39 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class Handler {
 
-  @ExceptionHandler(TestException.class)
-  public ResponseEntity<String> handleTestException(TestException ex) {
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+  @ExceptionHandler(NotReadyException.class)
+  public ResponseEntity<Map<String, String>> handleNotReadyException(NotReadyException ex) {
+    Map<String, String> response = new HashMap<>();
+    response.put("エラーメッセージ", ex.getMessage());
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
   }
 
   @ExceptionHandler(NotFoundException.class)
-  public ResponseEntity<String> handleNotFoundException(NotFoundException ex) {
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body((ex.getMessage()));
+  public ResponseEntity<Map<String, String>> handleNotFoundException(NotFoundException ex) {
+    Map<String, String> response = new HashMap<>();
+    response.put("エラーメッセージ", ex.getMessage());
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
   }
 
   @ExceptionHandler
-  public ResponseEntity<String> handleValidationExceptions(MethodArgumentNotValidException ex) {
-    StringBuilder errorMessage = new StringBuilder();
+  public ResponseEntity<List<Map<String, String>>> handleValidationExceptions(
+      MethodArgumentNotValidException ex) {
+    List<Map<String, String>> response = new ArrayList<>();
     for (FieldError error : ex.getBindingResult().getFieldErrors()) {
-      errorMessage.append(error.getDefaultMessage()).append("\n");
+      Map<String, String> errorDetail = new HashMap<>();
+      errorDetail.put("フィールド名", error.getField());
+      errorDetail.put("エラーメッセージ", error.getDefaultMessage());
+      response.add(errorDetail);
     }
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage.toString());
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
   }
 
   @ExceptionHandler(ConstraintViolationException.class)
-  public ResponseEntity<String> handleConstraintViolationExceptions(
+  public ResponseEntity<Map<String, String>> handleConstraintViolationExceptions(
       ConstraintViolationException ex) {
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    Map<String, String> response = new HashMap<>();
+    response.put("エラーメッセージ", ex.getMessage());
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
   }
 }
 

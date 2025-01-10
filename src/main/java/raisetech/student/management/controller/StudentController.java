@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import raisetech.student.management.domain.StudentDetail;
 import raisetech.student.management.exception.NotFoundException;
-import raisetech.student.management.exception.TestException;
+import raisetech.student.management.exception.NotReadyException;
 import raisetech.student.management.service.StudentService;
 
 /**
@@ -41,7 +41,7 @@ public class StudentController {
    * @return 受講生詳細一覧（全件）
    */
   @Operation(summary = "一覧検索", description = "受講生の一覧を検索します。")
-  @GetMapping({"/students", "/students/"}) // 末尾の/の有無で異なる動作をするため、/有でも一覧検索が返ってくるように指定。
+  @GetMapping("/students")
   public List<StudentDetail> getStudentList() {
     return service.searchStudentList();
   }
@@ -65,13 +65,13 @@ public class StudentController {
   /**
    * わざと例外処理を発生させるためのURLです。
    *
-   * @throws TestException
+   * @throws NotReadyException
    */
   @Operation(summary = "受講生の就職先一覧検索", description = "受講生の就職先一覧を検索します。")
   @ApiResponse(responseCode = "400", description = "リクエストが無効です。")
   @GetMapping("/jobs")
-  public StudentDetail getJobs() throws TestException {
-    throw new TestException("受講生の就職先情報は現在準備中です。");
+  public StudentDetail getJobs() throws NotReadyException {
+    throw new NotReadyException("受講生の就職先情報は現在準備中です。");
   }
 
   /**
