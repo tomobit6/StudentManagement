@@ -17,6 +17,7 @@
 ### API仕様書
 ### E-R図
 ### シーケンス図
+登録はまだしも更新については今のところvoidなので返りがない。ただ、HTTPレスポンスは返すため、これだけを返す表記をしたらいいのか？
 ```mermaid
 sequenceDiagram
     actor User
