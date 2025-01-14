@@ -20,13 +20,38 @@
 ```mermaid
 sequenceDiagram
     actor User
-    participant BR as ブラウザ
+    participant BR as Browser
     participant DB as Database
 
+　　%% 受講生情報（全件）の取得フロー
+　　Note right of User: 受講生情報（全件）の取得フロー
     User->>BR: GET /studetnts（受講生の一覧検索）
     BR->>DB: SELECT受講生全件
     DB-->>BR: 受講生一覧（全件）
     BR-->>User: 200 OK (受講生全件の詳細情報が返る）
+
+
+　　%% 受講生情報の取得フロー
+    Note right of User: 受講生情報の取得フロー
+    User->>BR: GET /studetnts/{id}（IDに紐づく受講生の検索）
+
+　　alt 受講生IDの形式が正しい場合
+      BR->>DB: SELECT受講生情報
+      alt 受講生IDが存在する場合
+        DB-->>BR: 受講生情報
+        BR-->>User: 200 OK (受講生の詳細情報が返る）
+　　  else 受講生IDが存在しない場合
+        DB-->>BR: null
+        BR-->>User: 404 Not Found
+　　　end
+   else 受講生IDの形式が不正な場合
+　　　BR-->User: 400 Bad Request
+   end
+　　　
+　　　
+　　　
+
+
 ### インフラ構成図
 ### URL一覧
 
