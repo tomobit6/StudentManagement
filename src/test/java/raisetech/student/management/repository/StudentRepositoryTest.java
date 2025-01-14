@@ -37,18 +37,17 @@ class StudentRepositoryTest {
   }
 
   @Test
-  void 正常系_受講生1件の検索が行えること() {
+  void 正常系_受講生IDに紐づく受講生の検索が行えること() {
     String id = "1";
     String expectName = "北海正己";
 
     Student actual = sut.searchStudent(id);
 
-    // System.out.println(actual.getName());
     assertThat(actual.getName()).isEqualTo(expectName);
   }
 
   @Test
-  void 異常系_DBに存在しない受講生idが指定された場合にnullを返すこと() {
+  void 異常系_DBに存在しない受講生IDが指定された場合にnullを返すこと() {
     String id = "99";
 
     Student actual = sut.searchStudent(id);
@@ -57,7 +56,7 @@ class StudentRepositoryTest {
   }
 
   @Test
-  void 正常系_受講生idに紐づいた受講生コースの検索が行えること() {
+  void 正常系_受講生IDに紐づいた受講生コースの検索が行えること() {
     Student student = new Student();
     student.setId("2");
 
@@ -66,8 +65,6 @@ class StudentRepositoryTest {
 
     List<StudentCourse> actual = sut.searchStudentCourse(student.getId());
 
-    // System.out.println(actual.getFirst().getCourseName());
-    // System.out.println(actual.getLast().getCourseName());
     assertThat(actual.getFirst().getCourseName()).isEqualTo(expectFirstCourseName);
     assertThat(actual.getLast().getCourseName()).isEqualTo(expectLastCourseName);
   }
@@ -144,7 +141,7 @@ class StudentRepositoryTest {
   }
 
   @Test
-  void 正常系_受講生idに紐づいた受講生コースの更新が行えていること() {
+  void 正常系_受講生IDに紐づいた受講生コースの更新が行えていること() {
     String studentId = "1";
 
     StudentCourse studentCourse = new StudentCourse();
@@ -161,10 +158,5 @@ class StudentRepositoryTest {
     List<StudentCourse> actual = sut.searchStudentCourse(studentId);
 
     assertThat(actual.get(0).getCourseName()).isEqualTo(studentCourse.getCourseName());
-  }
-
-  @Test
-  void 正常系_受講生idに紐づいた受講生コースに加えて受講生コースを登録する更新処理が行えていること() {
-
   }
 }
