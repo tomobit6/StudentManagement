@@ -38,7 +38,7 @@ sequenceDiagram
 　　alt 受講生IDの形式が正しい場合
       BR->>DB: SELECT受講生情報
       alt 受講生IDが存在する場合
-        DB-->>BR: 受講生情報
+        DB-->>BR: IDに紐づく受講生情報
         BR-->>User: 200 OK (受講生の詳細情報が返る）
 　　  else 受講生IDが存在しない場合
         DB-->>BR: null
@@ -47,8 +47,27 @@ sequenceDiagram
    else 受講生IDの形式が不正な場合
 　　　BR-->User: 400 Bad Request
    end
-　　　
-　　　
+
+
+   %% 受講生情報の登録フロー
+   Note right of User: 受講生情報の登録フロー
+   User->>BR: POST /registerStudent（受講生の登録）
+   alt 受講生情報の入力データが有効な場合
+     BR->>DB: INSERT受講生情報
+     DB-->>BR: 登録された受講生情報
+     BR-->>User: 200 OK (登録された受講生情報が返る）
+   else 受講生情報の入力データが不正な場合
+     BR-->>User:400 Bad Request
+
+   %% 受講生情報の更新フロー
+   Note right of User: 受講生情報の更新フロー
+   User->>BR: PUT /updateStudent（受講生の更新）
+   alt 受講生情報の入力データが有効な場合
+     BR->>DB: update受講生情報
+     DB-->>BR: 更新された受講生情報
+     BR-->>User: 200 OK (更新された受講生情報が返る）
+   else 受講生情報の入力データが不正な場合
+     BR-->>User:400 Bad Request 
 　　　
 
 
