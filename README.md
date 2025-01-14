@@ -61,17 +61,16 @@ sequenceDiagram
      BR-->>User:400 Bad Request
    end
 
-   %% 受講生情報の更新フロー
-   Note right of User: 受講生情報の更新フロー
+   %% 受講生情報の更新（論理削除含む）フロー
+   Note right of User: 受講生情報の更新（論理削除含む）フロー
    User->>BR: PUT /updateStudent（受講生の更新）
    alt 受講生情報の入力データが有効な場合
      BR->>DB: update受講生情報
-     DB-->>BR: 更新された受講生情報
-     BR-->>User: 200 OK (更新された受講生情報が返る）
+     DB-->>BR: 更新（削除）された受講生情報
+     BR-->>User: 200 OK (更新（削除）された受講生情報が返る）
    else 受講生情報の入力データが不正な場合
      BR-->>User:400 Bad Request
    end
-　　　
 
 
 ### インフラ構成図
