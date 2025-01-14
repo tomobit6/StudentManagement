@@ -17,6 +17,15 @@
 ### API仕様書
 ### E-R図
 ### シーケンス図
+sequenceDiagram
+    participant A as User
+    participant B as Server
+    participant C as Database
+
+    A->>B: リクエスト送信
+    B->>C: データベース問い合わせ
+    C-->>B: 応答返却
+    B-->>A: レスポンス返却
 ### インフラ構成図
 ### URL一覧
 
