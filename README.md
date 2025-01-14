@@ -58,6 +58,7 @@ sequenceDiagram
      BR-->>User: 200 OK (登録された受講生情報が返る）
    else 受講生情報の入力データが不正な場合
      BR-->>User:400 Bad Request
+   end
 
    %% 受講生情報の更新フロー
    Note right of User: 受講生情報の更新フロー
@@ -67,7 +68,8 @@ sequenceDiagram
      DB-->>BR: 更新された受講生情報
      BR-->>User: 200 OK (更新された受講生情報が返る）
    else 受講生情報の入力データが不正な場合
-     BR-->>User:400 Bad Request 
+     BR-->>User:400 Bad Request
+   end
 　　　
 
 
