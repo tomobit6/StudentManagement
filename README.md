@@ -23,10 +23,10 @@ sequenceDiagram
     participant B as Server
     participant C as Database
 
-    A->>B: リクエスト送信
-    B->>C: データベース問い合わせ
-    C-->>B: 応答返却
-    B-->>A: レスポンス返却
+    A->>B: GET /studetnts（受講生の一覧検索）
+    B->>C: SELECT受講生全件
+    C-->>B: 受講生一覧（全件）
+    B-->>A: 200 OK (受講生全件の詳細情報が返る）
 ### インフラ構成図
 ### URL一覧
 
