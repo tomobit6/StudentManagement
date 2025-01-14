@@ -17,6 +17,7 @@
 ### API仕様書
 ### E-R図
 ### シーケンス図
+```mermaid
 sequenceDiagram
     participant A as User
     participant B as Server
