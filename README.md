@@ -19,14 +19,14 @@
 ### シーケンス図
 ```mermaid
 sequenceDiagram
-    participant A as User
-    participant B as Server
-    participant C as Database
+    actor User
+    participant BR as ブラウザ
+    participant DB as Database
 
-    A->>B: GET /studetnts（受講生の一覧検索）
-    B->>C: SELECT受講生全件
-    C-->>B: 受講生一覧（全件）
-    B-->>A: 200 OK (受講生全件の詳細情報が返る）
+    User->>BR: GET /studetnts（受講生の一覧検索）
+    BR->>DB: SELECT受講生全件
+    DB-->>BR: 受講生一覧（全件）
+    BR-->>User: 200 OK (受講生全件の詳細情報が返る）
 ### インフラ構成図
 ### URL一覧
 
