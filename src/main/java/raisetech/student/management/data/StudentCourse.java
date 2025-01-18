@@ -17,4 +17,21 @@ public class StudentCourse {
   private String courseName;
   private LocalDate startDate;
   private LocalDate endDate;
+
+
+  public StudentCourse(String studentId, String courseName, LocalDate startDate,
+      LocalDate endDate) {
+    this.studentId = studentId;
+    this.courseName = courseName;
+    this.startDate = startDate;
+    this.endDate = endDate;
+  }
+
+  public StudentCourse(String studentId, String courseName) {
+    this.studentId = studentId;
+    this.courseName = courseName;
+  }
+
+  public StudentCourse() {
+  }
 }

@@ -68,13 +68,11 @@ class StudentControllerTest {
 
   @Test
   void 受講生詳細登録_正常系_登録情報が適切に返ってくること() throws Exception {
-    Student student = new Student();
-    student.setName("仮名前");
-    student.setRuby("かりなまえ");
-    student.setEmail("karinamae@example.com");
+    String studentId = "999";
+    Student student = new Student("仮名前", "かりなまえ", "karinamae@example.com");
+    student.setId(studentId);
 
-    StudentCourse studentCourse = new StudentCourse();
-    studentCourse.setCourseName("Javaコース");
+    StudentCourse studentCourse = new StudentCourse(student.getId(), "Javaコース");
     List<StudentCourse> studentCourseList = List.of(studentCourse);
 
     StudentDetail studentDetail = new StudentDetail(student, studentCourseList);
@@ -208,13 +206,9 @@ class StudentControllerTest {
 
   @Test
   void 受講生詳細更新_正常系_更新情報が適切に返ってくること() throws Exception {
-    Student student = new Student();
-    student.setName("仮名前");
-    student.setRuby("かりなまえ");
-    student.setEmail("karinamae@example.com");
+    Student student = new Student("仮名前", "かりなまえ", "karinamae@example.com");
 
-    StudentCourse studentCourse = new StudentCourse();
-    studentCourse.setCourseName("Javaコース");
+    StudentCourse studentCourse = new StudentCourse(student.getId(), "Javaコース");
     List<StudentCourse> studentCourseList = List.of(studentCourse);
 
     StudentDetail studentDetail = new StudentDetail(student, studentCourseList);

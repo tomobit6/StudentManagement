@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import raisetech.student.management.controller.converter.StudentConverter;
 import raisetech.student.management.data.Student;
@@ -44,26 +45,15 @@ class StudentServiceTest {
 
   // 受講生データを作成するメソッド
   private Student createStudent() {
-    Student student = new Student();
-    student.setId("1");
-    student.setName("仮名前");
-    student.setRuby("かりなまえ");
-    student.setNickname("仮");
-    student.setEmail("karinamae@example.com");
-    student.setAddress("高知県高知市");
-    student.setAge(15);
-    student.setGender("男");
+    Student student = new Student("仮名前", "かりなまえ", "カリ", "karinamae@example.com",
+        "高知県高知市", 15, "男", "", false);
     return student;
   }
 
   // 受講生のコースデータを作成するメソッド
   private StudentCourse createStudentCourse(Student student) {
-    StudentCourse studentCourse = new StudentCourse();
-    studentCourse.setId(student.getId());
-    studentCourse.setStudentId(student.getId());
-    studentCourse.setCourseName("Javaコース");
-    studentCourse.setStartDate(LocalDate.of(2024, 1, 1));
-    studentCourse.setEndDate(LocalDate.of(2024, 12, 31));
+    StudentCourse studentCourse = new StudentCourse(student.getId(), "Javaコース",
+        LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 31));
     return studentCourse;
   }
 
@@ -74,7 +64,6 @@ class StudentServiceTest {
     List<StudentCourse> studentCourseList = new ArrayList<>();
     List<StudentDetail> expected = new ArrayList<>();
 
-    // モックの設定
     when(repository.search()).thenReturn(studentList);
     when(repository.searchStudentCourseList()).thenReturn(studentCourseList);
     when(converter.convertStudentDetails(studentList, studentCourseList)).thenReturn(expected);
@@ -94,14 +83,14 @@ class StudentServiceTest {
   void 受講生詳細検索_リポジトリの処理が適切に呼び出されていること()
       throws NotFoundException {
     // 事前準備
-    String id = "1";
-    Student student = new Student();
+    String id = "999";
+    Student student = Mockito.mock(Student.class);
+    when(student.getId()).thenReturn(id);
 
-    StudentCourse studentCourse = new StudentCourse();
+    StudentCourse studentCourse = new StudentCourse(student.getId(), "Javaコース");
 
     List<StudentCourse> studentCourseList = List.of(studentCourse);
 
-    // モックの設定
     when(repository.searchStudent(id)).thenReturn(student);
     when(repository.searchStudentCourse(student.getId())).thenReturn(studentCourseList);
 
@@ -122,7 +111,6 @@ class StudentServiceTest {
     // 事前準備
     String id = "1";
 
-    // モックの設定
     when(repository.searchStudent(id)).thenReturn(null);
 
     // 実行
@@ -158,11 +146,9 @@ class StudentServiceTest {
   @Test
   void 受講生コース情報登録_正常系_適切に情報が渡されていること() {
     // 事前準備
-    StudentCourse studentCourse = new StudentCourse();
-    String studentId = "1";
+    String studentId = "999";
     LocalDate fixDate = LocalDate.of(2024, 12, 27);
 
-    // モックの設定
     Student spy = spy(Student.class);
     when(spy.getId()).thenReturn(studentId);
 
@@ -170,6 +156,8 @@ class StudentServiceTest {
       mockedStatic.when(LocalDate::now).thenReturn(fixDate);
 
       // 実行
+      StudentCourse studentCourse = new StudentCourse(studentId, "Javaコース", fixDate,
+          fixDate.plusYears(1));
       sut.initStudentCourse(studentCourse, spy);
 
       // 検証
