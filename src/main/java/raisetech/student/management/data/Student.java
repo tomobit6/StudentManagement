@@ -64,11 +64,6 @@ public class Student {
     this.gender = gender;
   }
 
-  public Student(String name, String nickname, String email, String address, Integer age,
-      String gender) {
-
-  }
-
   public Student() {
   }
 }
