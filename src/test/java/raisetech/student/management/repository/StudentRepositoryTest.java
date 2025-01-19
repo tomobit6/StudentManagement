@@ -5,9 +5,9 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -27,30 +27,54 @@ class StudentRepositoryTest {
 
   @Test
   void 正常系_受講生の全件検索が行えること() {
+    List<Student> expected = Arrays.asList(
+        new Student("北海正己", "ほっかいまさみ", "ホッカイくん", "todoroki@example.com",
+            "北海道札幌市", 22, "男"),
+        new Student("佐藤花子", "さとうはなこ", "ハナちゃん", "hanako.sato@example.com",
+            "神奈川県横浜市", 25, "女"),
+        new Student("山田太郎", "やまだたろう", "タロちゃん", "taro.yamada@example.com",
+            "大阪府大阪市", 30, "その他"),
+        new Student("川島梅子", "かわしまうめこ", "ウメちゃん", "ume@example.com", "山口県山口市",
+            18, "女"),
+        new Student("田中検事", "たなかけんじ", "ケンちゃん", "kenji@example.com", "徳島県徳島市",
+            36, "男"),
+        new Student("東北清子", "とうほくきよこ", "キヨちゃん", "kiyo@example.com", "宮城県仙台市",
+            26, "女")
+    );
+
     List<Student> actual = sut.search();
 
     assertThat(actual.size()).isEqualTo(6);
-    assertThat(actual.get(0).getName()).isEqualTo("北海正己");
-    assertThat(actual.get(1).getName()).isEqualTo("佐藤花子");
-    assertThat(actual.get(2).getName()).isEqualTo("山田太郎");
-    assertThat(actual.get(3).getName()).isEqualTo("川島梅子");
-    assertThat(actual.get(4).getName()).isEqualTo("田中検事");
-    assertThat(actual.get(5).getName()).isEqualTo("東北清子");
+    assertThat(actual).usingElementComparatorIgnoringFields("id")
+        .containsExactlyInAnyOrderElementsOf(expected);
   }
 
   @Test
   void 正常系_受講生コースの全件検索が行えること() {
+    List<StudentCourse> expected = Arrays.asList(
+        new StudentCourse("1", "web開発基礎", LocalDate.parse("2024-11-03"),
+            LocalDate.parse("2025-11-03")),
+        new StudentCourse("2", "Webマーケティングコース", LocalDate.parse("2024-11-10"),
+            LocalDate.parse("2025-11-10")),
+        new StudentCourse("2", "バックエンド開発", LocalDate.parse("2024-01-10"),
+            LocalDate.parse("2024-03-10")),
+        new StudentCourse("3", "データベース入門", LocalDate.parse("2024-02-15"),
+            LocalDate.parse("2024-04-15")),
+        new StudentCourse("4", "ウェブ開発基礎", LocalDate.parse("2024-03-01"),
+            LocalDate.parse("2024-05-01")),
+        new StudentCourse("5", "ウェブ開発基礎", LocalDate.parse("2024-03-11"),
+            LocalDate.parse("2024-05-10")),
+        new StudentCourse("6", "フロントエンド開発", LocalDate.parse("2024-10-19"),
+            LocalDate.parse("2025-10-19")),
+        new StudentCourse("6", "データベース設計", LocalDate.parse("2024-10-25"),
+            LocalDate.parse("2025-10-25"))
+    );
+
     List<StudentCourse> actual = sut.searchStudentCourseList();
 
     assertThat(actual.size()).isEqualTo(8);
-    assertThat(actual.get(0).getCourseName()).isEqualTo("web開発基礎");
-    assertThat(actual.get(1).getCourseName()).isEqualTo("Webマーケティングコース");
-    assertThat(actual.get(2).getCourseName()).isEqualTo("バックエンド開発");
-    assertThat(actual.get(3).getCourseName()).isEqualTo("データベース入門");
-    assertThat(actual.get(4).getCourseName()).isEqualTo("ウェブ開発基礎");
-    assertThat(actual.get(5).getCourseName()).isEqualTo("ウェブ開発基礎");
-    assertThat(actual.get(6).getCourseName()).isEqualTo("フロントエンド開発");
-    assertThat(actual.get(7).getCourseName()).isEqualTo("データベース設計");
+    assertThat(actual).usingElementComparatorIgnoringFields("id")
+        .containsExactlyInAnyOrderElementsOf(expected);
   }
 
   @Test
@@ -75,13 +99,11 @@ class StudentRepositoryTest {
   @Test
   void 正常系_受講生IDに紐づいた受講生コースの検索が行えること() {
     String studentId = "2";
-    Student student = Mockito.mock(Student.class);
-    when(student.getId()).thenReturn(studentId);
 
     String expectFirstCourseName = "Webマーケティングコース";
     String expectLastCourseName = "バックエンド開発";
 
-    List<StudentCourse> actual = sut.searchStudentCourse(student.getId());
+    List<StudentCourse> actual = sut.searchStudentCourse(studentId);
 
     assertThat(actual.getFirst().getCourseName()).isEqualTo(expectFirstCourseName);
     assertThat(actual.getLast().getCourseName()).isEqualTo(expectLastCourseName);

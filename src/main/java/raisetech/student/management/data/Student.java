@@ -52,14 +52,21 @@ public class Student {
     this.email = email;
   }
 
-  public Student(String nickname, String address, Integer age, String gender, String remark,
-      boolean isDeleted) {
+  public Student(String name, String ruby, String nickname, String email, String address,
+      Integer age,
+      String gender) {
+    this.name = name;
+    this.ruby = ruby;
     this.nickname = nickname;
+    this.email = email;
     this.address = address;
     this.age = age;
     this.gender = gender;
-    this.remark = remark;
-    this.isDeleted = isDeleted;
+  }
+
+  public Student(String name, String nickname, String email, String address, Integer age,
+      String gender) {
+
   }
 
   public Student() {
