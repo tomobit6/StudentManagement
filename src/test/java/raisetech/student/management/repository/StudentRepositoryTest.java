@@ -28,53 +28,54 @@ class StudentRepositoryTest {
   @Test
   void 正常系_受講生の全件検索が行えること() {
     List<Student> expected = Arrays.asList(
-        new Student("北海正己", "ほっかいまさみ", "ホッカイくん", "todoroki@example.com",
-            "北海道札幌市", 22, "男"),
-        new Student("佐藤花子", "さとうはなこ", "ハナちゃん", "hanako.sato@example.com",
-            "神奈川県横浜市", 25, "女"),
-        new Student("山田太郎", "やまだたろう", "タロちゃん", "taro.yamada@example.com",
-            "大阪府大阪市", 30, "その他"),
-        new Student("川島梅子", "かわしまうめこ", "ウメちゃん", "ume@example.com", "山口県山口市",
-            18, "女"),
-        new Student("田中検事", "たなかけんじ", "ケンちゃん", "kenji@example.com", "徳島県徳島市",
-            36, "男"),
-        new Student("東北清子", "とうほくきよこ", "キヨちゃん", "kiyo@example.com", "宮城県仙台市",
-            26, "女")
+        new Student("1", "北海正己", "ほっかいまさみ", "ホッカイくん", "todoroki@example.com",
+            "北海道札幌市", 22, "男", null, false),
+        new Student("2", "佐藤花子", "さとうはなこ", "ハナちゃん", "hanako.sato@example.com",
+            "神奈川県横浜市", 25, "女", null, false),
+        new Student("3", "山田太郎", "やまだたろう", "タロちゃん", "taro.yamada@example.com",
+            "大阪府大阪市", 30, "その他", null, false),
+        new Student("4", "川島梅子", "かわしまうめこ", "ウメちゃん", "ume@example.com",
+            "山口県山口市",
+            18, "女", null, false),
+        new Student("5", "田中検事", "たなかけんじ", "ケンちゃん", "kenji@example.com",
+            "徳島県徳島市",
+            36, "男", null, false),
+        new Student("6", "東北清子", "とうほくきよこ", "キヨちゃん", "kiyo@example.com",
+            "宮城県仙台市",
+            26, "女", null, false)
     );
 
     List<Student> actual = sut.search();
 
     assertThat(actual.size()).isEqualTo(6);
-    assertThat(actual).usingElementComparatorIgnoringFields("id")
-        .containsExactlyInAnyOrderElementsOf(expected);
+    assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
   }
 
   @Test
   void 正常系_受講生コースの全件検索が行えること() {
     List<StudentCourse> expected = Arrays.asList(
-        new StudentCourse("1", "web開発基礎", LocalDate.parse("2024-11-03"),
+        new StudentCourse("1", "1", "web開発基礎", LocalDate.parse("2024-11-03"),
             LocalDate.parse("2025-11-03")),
-        new StudentCourse("2", "Webマーケティングコース", LocalDate.parse("2024-11-10"),
+        new StudentCourse("2", "2", "Webマーケティングコース", LocalDate.parse("2024-11-10"),
             LocalDate.parse("2025-11-10")),
-        new StudentCourse("2", "バックエンド開発", LocalDate.parse("2024-01-10"),
+        new StudentCourse("3", "2", "バックエンド開発", LocalDate.parse("2024-01-10"),
             LocalDate.parse("2024-03-10")),
-        new StudentCourse("3", "データベース入門", LocalDate.parse("2024-02-15"),
+        new StudentCourse("4", "3", "データベース入門", LocalDate.parse("2024-02-15"),
             LocalDate.parse("2024-04-15")),
-        new StudentCourse("4", "ウェブ開発基礎", LocalDate.parse("2024-03-01"),
+        new StudentCourse("5", "4", "ウェブ開発基礎", LocalDate.parse("2024-03-01"),
             LocalDate.parse("2024-05-01")),
-        new StudentCourse("5", "ウェブ開発基礎", LocalDate.parse("2024-03-11"),
+        new StudentCourse("6", "5", "ウェブ開発基礎", LocalDate.parse("2024-03-11"),
             LocalDate.parse("2024-05-10")),
-        new StudentCourse("6", "フロントエンド開発", LocalDate.parse("2024-10-19"),
+        new StudentCourse("7", "6", "フロントエンド開発", LocalDate.parse("2024-10-19"),
             LocalDate.parse("2025-10-19")),
-        new StudentCourse("6", "データベース設計", LocalDate.parse("2024-10-25"),
+        new StudentCourse("8", "6", "データベース設計", LocalDate.parse("2024-10-25"),
             LocalDate.parse("2025-10-25"))
     );
 
     List<StudentCourse> actual = sut.searchStudentCourseList();
 
     assertThat(actual.size()).isEqualTo(8);
-    assertThat(actual).usingElementComparatorIgnoringFields("id")
-        .containsExactlyInAnyOrderElementsOf(expected);
+    assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
   }
 
   @Test

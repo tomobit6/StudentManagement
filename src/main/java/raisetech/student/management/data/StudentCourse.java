@@ -19,6 +19,15 @@ public class StudentCourse {
   private LocalDate endDate;
 
 
+  public StudentCourse(String id, String studentId, String courseName, LocalDate startDate,
+      LocalDate endDate) {
+    this.id = id;
+    this.studentId = studentId;
+    this.courseName = courseName;
+    this.startDate = startDate;
+    this.endDate = endDate;
+  }
+
   public StudentCourse(String studentId, String courseName, LocalDate startDate,
       LocalDate endDate) {
     this.studentId = studentId;
