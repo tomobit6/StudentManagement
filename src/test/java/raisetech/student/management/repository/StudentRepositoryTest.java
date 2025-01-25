@@ -1,8 +1,6 @@
 package raisetech.student.management.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -152,28 +150,22 @@ class StudentRepositoryTest {
 
   @Test
   void 正常系_受講生の更新が行えていること() {
-    String id = "2";
-
-    Student student = new Student("佐藤花子", "さとうはなこ", "ハナちゃん",
+    Student student = new Student("2", "佐藤花子", "さとうはなこ", "ハナちゃん",
         "hanako.sato@example.com", "神奈川県横浜市", 25, "女", "", false);
 
-    Student spy = spy(student);
-    when(spy.getId()).thenReturn(id);
-
     // 佐藤さんが結婚して姓が変わり、引っ越した想定
-    spy.setName("鈴木花子");
-    spy.setRuby("すずきはなこ");
-    spy.setEmail("hanako.suzuki@example.com");
-    spy.setAddress("神奈川県横須賀市");
+    student.setName("鈴木花子");
+    student.setRuby("すずきはなこ");
+    student.setEmail("hanako.suzuki@example.com");
+    student.setAddress("神奈川県横須賀市");
 
-    sut.updateStudent(spy);
+    sut.updateStudent(student);
+    Student actual = sut.searchStudent(student.getId());
 
-    Student actual = sut.searchStudent(id);
-
-    assertThat(actual.getName()).isEqualTo(spy.getName());
-    assertThat(actual.getRuby()).isEqualTo(spy.getRuby());
-    assertThat(actual.getEmail()).isEqualTo(spy.getEmail());
-    assertThat(actual.getAddress()).isEqualTo(spy.getAddress());
+    assertThat(actual.getName()).isEqualTo(student.getName());
+    assertThat(actual.getRuby()).isEqualTo(student.getRuby());
+    assertThat(actual.getEmail()).isEqualTo(student.getEmail());
+    assertThat(actual.getAddress()).isEqualTo(student.getAddress());
   }
 
   @Test

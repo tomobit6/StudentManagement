@@ -68,9 +68,9 @@ class StudentControllerTest {
 
   @Test
   void 受講生詳細登録_正常系_登録情報が適切に返ってくること() throws Exception {
-    String studentId = "999";
-    Student student = new Student("仮名前", "かりなまえ", "karinamae@example.com");
-    student.setId(studentId);
+    Student student = new Student("999", "仮名前", "かりなまえ", "カリ", "karinamae@example.com",
+        "高知県高知市",
+        99, "その他", "", false);
 
     StudentCourse studentCourse = new StudentCourse(student.getId(), "Javaコース");
     List<StudentCourse> studentCourseList = List.of(studentCourse);

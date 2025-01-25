@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -17,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import raisetech.student.management.controller.converter.StudentConverter;
 import raisetech.student.management.data.Student;
@@ -83,22 +81,20 @@ class StudentServiceTest {
   void 受講生詳細検索_リポジトリの処理が適切に呼び出されていること()
       throws NotFoundException {
     // 事前準備
-    String id = "999";
-    Student student = Mockito.mock(Student.class);
-    when(student.getId()).thenReturn(id);
+    Student student = createStudent();
 
-    StudentCourse studentCourse = new StudentCourse(student.getId(), "Javaコース");
+    StudentCourse studentCourse = createStudentCourse(student);
 
     List<StudentCourse> studentCourseList = List.of(studentCourse);
 
-    when(repository.searchStudent(id)).thenReturn(student);
+    when(repository.searchStudent(student.getId())).thenReturn(student);
     when(repository.searchStudentCourse(student.getId())).thenReturn(studentCourseList);
 
     // 実行
-    StudentDetail actual = sut.searchStudent(id);
+    StudentDetail actual = sut.searchStudent(student.getId());
 
     // 検証
-    verify(repository, times(1)).searchStudent(id);
+    verify(repository, times(1)).searchStudent(student.getId());
     verify(repository, times(1)).searchStudentCourse(student.getId());
 
     assertEquals(student, actual.getStudent());
@@ -146,22 +142,19 @@ class StudentServiceTest {
   @Test
   void 受講生コース情報登録_正常系_適切に情報が渡されていること() {
     // 事前準備
-    String studentId = "999";
+    Student student = createStudent();
     LocalDate fixDate = LocalDate.of(2024, 12, 27);
-
-    Student spy = spy(Student.class);
-    when(spy.getId()).thenReturn(studentId);
 
     try (MockedStatic<LocalDate> mockedStatic = mockStatic(LocalDate.class)) {
       mockedStatic.when(LocalDate::now).thenReturn(fixDate);
 
       // 実行
-      StudentCourse studentCourse = new StudentCourse(studentId, "Javaコース", fixDate,
+      StudentCourse studentCourse = new StudentCourse(student.getId(), "Javaコース", fixDate,
           fixDate.plusYears(1));
-      sut.initStudentCourse(studentCourse, spy);
+      sut.initStudentCourse(studentCourse, student);
 
       // 検証
-      assertEquals(studentId, studentCourse.getStudentId());
+      assertEquals(student.getId(), studentCourse.getStudentId());
       assertEquals(fixDate, studentCourse.getStartDate());
       assertEquals(fixDate.plusYears(1), studentCourse.getEndDate());
     }
