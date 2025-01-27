@@ -26,9 +26,9 @@ erDiagram
     varchar email "メールアドレス"
     varchar addess "住所"
     int age "年齢"
-    enum('男','女','その他') gender "性別"
+    enum{'男','女','その他'} gender "性別"
     varchar remark "備考"
-    tinyint(1) is_Deleted
+    boolean is_Deleted
   }
 ```
 ### シーケンス図
