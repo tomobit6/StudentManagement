@@ -16,6 +16,21 @@
 ## 設計書
 ### API仕様書
 ### E-R図
+```mermaid
+erDiagram
+  users {
+    int id "ID" PK
+    varchar name "名前"
+    varchar ruby "ふりがな"
+    varchar nickname "ニックネーム"
+    varchar email "メールアドレス"
+    varchar adress "住所"
+    int age "年齢"
+    enum('男','女','その他') gender "性別"
+    varchar remark "備考"
+    tinyint(1) is_Deleted
+  }
+```
 ### シーケンス図
 登録はまだしも更新については今のところvoidなので返りがない。ただ、HTTPレスポンスは返すため、これだけを返す表記をしたらいいのか？
 ```mermaid
