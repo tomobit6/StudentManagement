@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -44,26 +43,15 @@ class StudentServiceTest {
 
   // 受講生データを作成するメソッド
   private Student createStudent() {
-    Student student = new Student();
-    student.setId("1");
-    student.setName("仮名前");
-    student.setRuby("かりなまえ");
-    student.setNickname("仮");
-    student.setEmail("karinamae@example.com");
-    student.setAddress("高知県高知市");
-    student.setAge(15);
-    student.setGender("男");
+    Student student = new Student("仮名前", "かりなまえ", "カリ", "karinamae@example.com",
+        "高知県高知市", 15, "男", "", false);
     return student;
   }
 
   // 受講生のコースデータを作成するメソッド
   private StudentCourse createStudentCourse(Student student) {
-    StudentCourse studentCourse = new StudentCourse();
-    studentCourse.setId(student.getId());
-    studentCourse.setStudentId(student.getId());
-    studentCourse.setCourseName("Javaコース");
-    studentCourse.setStartDate(LocalDate.of(2024, 1, 1));
-    studentCourse.setEndDate(LocalDate.of(2024, 12, 31));
+    StudentCourse studentCourse = new StudentCourse(student.getId(), "Javaコース",
+        LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 31));
     return studentCourse;
   }
 
@@ -74,7 +62,6 @@ class StudentServiceTest {
     List<StudentCourse> studentCourseList = new ArrayList<>();
     List<StudentDetail> expected = new ArrayList<>();
 
-    // モックの設定
     when(repository.search()).thenReturn(studentList);
     when(repository.searchStudentCourseList()).thenReturn(studentCourseList);
     when(converter.convertStudentDetails(studentList, studentCourseList)).thenReturn(expected);
@@ -94,22 +81,20 @@ class StudentServiceTest {
   void 受講生詳細検索_リポジトリの処理が適切に呼び出されていること()
       throws NotFoundException {
     // 事前準備
-    String id = "1";
-    Student student = new Student();
+    Student student = createStudent();
 
-    StudentCourse studentCourse = new StudentCourse();
+    StudentCourse studentCourse = createStudentCourse(student);
 
     List<StudentCourse> studentCourseList = List.of(studentCourse);
 
-    // モックの設定
-    when(repository.searchStudent(id)).thenReturn(student);
+    when(repository.searchStudent(student.getId())).thenReturn(student);
     when(repository.searchStudentCourse(student.getId())).thenReturn(studentCourseList);
 
     // 実行
-    StudentDetail actual = sut.searchStudent(id);
+    StudentDetail actual = sut.searchStudent(student.getId());
 
     // 検証
-    verify(repository, times(1)).searchStudent(id);
+    verify(repository, times(1)).searchStudent(student.getId());
     verify(repository, times(1)).searchStudentCourse(student.getId());
 
     assertEquals(student, actual.getStudent());
@@ -122,7 +107,6 @@ class StudentServiceTest {
     // 事前準備
     String id = "1";
 
-    // モックの設定
     when(repository.searchStudent(id)).thenReturn(null);
 
     // 実行
@@ -158,22 +142,19 @@ class StudentServiceTest {
   @Test
   void 受講生コース情報登録_正常系_適切に情報が渡されていること() {
     // 事前準備
-    StudentCourse studentCourse = new StudentCourse();
-    String studentId = "1";
+    Student student = createStudent();
     LocalDate fixDate = LocalDate.of(2024, 12, 27);
-
-    // モックの設定
-    Student spy = spy(Student.class);
-    when(spy.getId()).thenReturn(studentId);
 
     try (MockedStatic<LocalDate> mockedStatic = mockStatic(LocalDate.class)) {
       mockedStatic.when(LocalDate::now).thenReturn(fixDate);
 
       // 実行
-      sut.initStudentCourse(studentCourse, spy);
+      StudentCourse studentCourse = new StudentCourse(student.getId(), "Javaコース", fixDate,
+          fixDate.plusYears(1));
+      sut.initStudentCourse(studentCourse, student);
 
       // 検証
-      assertEquals(studentId, studentCourse.getStudentId());
+      assertEquals(student.getId(), studentCourse.getStudentId());
       assertEquals(fixDate, studentCourse.getStartDate());
       assertEquals(fixDate.plusYears(1), studentCourse.getEndDate());
     }

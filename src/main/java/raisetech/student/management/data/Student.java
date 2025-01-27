@@ -32,4 +32,53 @@ public class Student {
   private String gender;
   private String remark;
   private boolean isDeleted;
+
+
+  public Student(String id, String name, String ruby, String nickname, String email, String address,
+      Integer age, String gender, String remark, boolean isDeleted) {
+    this.id = id;
+    this.name = name;
+    this.ruby = ruby;
+    this.nickname = nickname;
+    this.email = email;
+    this.address = address;
+    this.age = age;
+    this.gender = gender;
+    this.remark = remark;
+    this.isDeleted = isDeleted;
+  }
+
+  public Student(String name, String ruby, String nickname, String email, String address,
+      Integer age, String gender, String remark, boolean isDeleted) {
+    this.name = name;
+    this.ruby = ruby;
+    this.nickname = nickname;
+    this.email = email;
+    this.address = address;
+    this.age = age;
+    this.gender = gender;
+    this.remark = remark;
+    this.isDeleted = isDeleted;
+  }
+
+  public Student(String name, String ruby, String email) {
+    this.ruby = ruby;
+    this.name = name;
+    this.email = email;
+  }
+
+  public Student(String name, String ruby, String nickname, String email, String address,
+      Integer age,
+      String gender) {
+    this.name = name;
+    this.ruby = ruby;
+    this.nickname = nickname;
+    this.email = email;
+    this.address = address;
+    this.age = age;
+    this.gender = gender;
+  }
+
+  public Student() {
+  }
 }

@@ -15,23 +15,23 @@ class StudentConverterTest {
 
   @Test
   void 正常系_受講生や受講生コース情報が正しく受講生詳細に変換できていること() {
-    Student student1 = new Student();
-    student1.setId("777");
-    Student student2 = new Student();
-    student2.setId("888");
-    Student student3 = new Student();
-    student3.setId("999");
+    Student student1 = new Student("777", "仮名前", "かりなまえ", "カリ", "karinamae@example.com",
+        "高知県高知市",
+        77, "男", "", false);
+    Student student2 = new Student("888", "偽名前", "にせなまえ", "ニセ", "nisenamae@example.com",
+        "高知県高知市",
+        88, "女", "", false);
+    Student student3 = new Student("999", "疑似名前", "ぎじなまえ", "ギジ", "gizinamae@example.com",
+        "高知県高知市",
+        99, "その他", "", false);
 
     List<Student> studentList = List.of(student1, student2, student3);
 
-    StudentCourse studentCourse1 = new StudentCourse();
-    studentCourse1.setStudentId(student1.getId());
-    StudentCourse studentCourse2 = new StudentCourse();
-    studentCourse2.setStudentId(student1.getId()); // student1はコース情報2つと仮定
-    StudentCourse studentCourse3 = new StudentCourse();
-    studentCourse3.setStudentId(student2.getId());
-    StudentCourse studentCourse4 = new StudentCourse();
-    studentCourse4.setStudentId(student3.getId());
+    StudentCourse studentCourse1 = new StudentCourse(student1.getId(), "Javaコース");
+    StudentCourse studentCourse2 = new StudentCourse(student1.getId(),
+        "JavaScriptコース"); // student1はコース情報2つと仮定
+    StudentCourse studentCourse3 = new StudentCourse(student2.getId(), "Pythonコース");
+    StudentCourse studentCourse4 = new StudentCourse(student3.getId(), "Cコース");
 
     List<StudentCourse> studentCourses = List.of(studentCourse1, studentCourse2,
         studentCourse3, studentCourse4);
