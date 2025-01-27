@@ -18,8 +18,8 @@
 ### E-R図
 ```mermaid
 erDiagram
-%% 性別は「男」「女」「その他」のいずれかを選択
   users {
+  %% 性別は「男」「女」「その他」のいずれかを選択
     int id "ID"
     string name "名前"
     string ruby "ふりがな"
