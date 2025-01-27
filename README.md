@@ -19,7 +19,7 @@
 ```mermaid
 erDiagram
   users {
-    PK int id "ID"
+    int id "ID"
     string name "名前"
     string ruby "ふりがな"
     string nickname "ニックネーム"
