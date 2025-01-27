@@ -19,16 +19,16 @@
 ```mermaid
 erDiagram
   users {
-    int id "ID" PK
-    varchar name "名前"
-    varchar ruby "ふりがな"
-    varchar nickname "ニックネーム"
-    varchar email "メールアドレス"
-    varchar addess "住所"
+    int id "ID"
+    string name "名前"
+    string ruby "ふりがな"
+    string nickname "ニックネーム"
+    string email "メールアドレス"
+    string address "住所"
     int age "年齢"
-    enum{'男','女','その他'} gender "性別"
-    varchar remark "備考"
-    boolean is_Deleted
+    enum gender "性別" {"男", "女", "その他"}
+    string remark "備考"
+    boolean is_Deleted "削除フラグ"
   }
 ```
 ### シーケンス図
