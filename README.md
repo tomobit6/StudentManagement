@@ -19,14 +19,15 @@
 ```mermaid
 erDiagram
   users {
-    int id "ID" PK
+  %% 性別は「男」「女」「その他」のいずれかを選択
+    int id "ID"PK
     string name "名前"
     string ruby "ふりがな"
     string nickname "ニックネーム"
     string email "メールアドレス"
     string address "住所"
     int age "年齢"
-    string gender "性別" "{'男','女','その他'}"
+    string gender "性別"
     string remark "備考"
     boolean is_Deleted "削除フラグ"
   }
