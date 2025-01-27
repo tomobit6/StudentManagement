@@ -24,7 +24,7 @@ erDiagram
     varchar ruby "ふりがな"
     varchar nickname "ニックネーム"
     varchar email "メールアドレス"
-    varchar adress "住所"
+    varchar addess "住所"
     int age "年齢"
     enum('男','女','その他') gender "性別"
     varchar remark "備考"
